@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canal de Denuncias — Gascón Gestión Empresarial</title>
+<style>
+  :root {
+    --azul: #0f4c81;
+    --azul-claro: #1a6db5;
+    --azul-fondo: #e8f0f9;
+    --gris: #f5f6f8;
+    --gris-borde: #dce2ea;
+    --texto: #1a1d23;
+    --texto-sec: #5a6272;
+    --blanco: #ffffff;
+    --verde: #1a7a45;
+    --verde-fondo: #e8f5ee;
+    --rojo: #b91c1c;
+    --rojo-fondo: #fef2f2;
+    --amarillo-fondo: #fffbeb;
+    --amarillo: #92400e;
+    --radio: 8px;
+    --radio-lg: 12px;
+    --sombra: 0 2px 12px rgba(15,76,129,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--gris);
+    color: var(--texto);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  .cabecera {
+    background: var(--azul);
+    color: #fff;
+    padding: 0;
+  }
+  .cabecera-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+  .cabecera-icono {
+    width: 56px; height: 56px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 26px;
+  }
+  .cabecera h1 {
+    font-size: 1.7rem;
+    font-weight: normal;
+    letter-spacing: -0.3px;
+    margin-bottom: 0.35rem;
+  }
+  .cabecera p {
+    font-size: 0.92rem;
+    opacity: 0.82;
+    font-family: Arial, sans-serif;
+    max-width: 560px;
+  }
+  .nav-tabs {
+    background: var(--azul);
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+  .nav-tabs-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+    padding: 0 2rem;
+    overflow-x: auto;
+  }
+  .tab-btn {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.65);
+    font-family: Arial, sans-serif;
+    font-size: 0.85rem;
+    padding: 0.85rem 1.1rem;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    transition: all 0.15s;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+  .tab-btn:hover { color: #fff; background: rgba(255,255,255,0.07); }
+  .tab-btn.activo { color: #fff; border-bottom-color: #fff; }
+  .contenido {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  .seccion { display: none; }
+  .seccion.activa { display: block; }
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .info-card {
+    background: var(--blanco);
+    border: 1px solid var(--gris-borde);
+    border-radius: var(--radio-lg);
+    padding: 1.25rem;
+  }
+  .info-card .ic-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 0.6rem;
+  }
+  .ic-dot {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+  }
+  .ic-dot.azul { background: var(--azul-fondo); }
+  .ic-dot.verde { background: var(--verde-fondo); }
+  .ic-dot.amarillo { background: var(--amarillo-fondo); }
+  .info-card h3 {
+    font-size: 0.88rem;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    color: var(--texto);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .info-card p {
+    font-size: 0.88rem;
+    color: var(--texto-sec);
+    font-family: Arial, sans-serif;
+  }
+  .alerta {
+    border-radius: var(--radio);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    font-family: Arial, sans-serif;
+    font-size: 0.9rem;
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+  .alerta.info { background: var(--azul-fondo); color: #0c3461; border-left: 4px solid var(--azul-claro); }
+  .alerta.aviso { background: var(--amarillo-fondo); color: var(--amarillo); border-left: 4px solid #d97706; }
+  .alerta-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .form-card {
+    background: var(--blanco);
+    border: 1px solid var(--gris-borde);
+    border-radius: var(--radio-lg);
+    padding: 2rem;
+    box-shadow: var(--sombra);
+  }
+  .form-card h2 {
+    font-size: 1.15rem;
+    margin-bottom: 0.25rem;
+    font-weight: normal;
+  }
+  .form-card .subtitulo {
+    font-size: 0.87rem;
+    color: var(--texto-sec);
+    font-family: Arial, sans-serif;
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--gris-borde);
+  }
+  .form-fila {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .form-grupo {
+    margin-bottom: 1rem;
+  }
+  .form-grupo label {
+    display: block;
+    font-size: 0.83rem;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    color: var(--texto);
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .form-grupo label .obligatorio { color: var(--rojo); }
+  .form-grupo input,
+  .form-grupo select,
+  .form-grupo textarea {
+    width: 100%;
+    border: 1px solid var(--gris-borde);
+    border-radius: var(--radio);
+    padding: 0.65rem 0.85rem;
+    font-family: Arial, sans-serif;
+    font-size: 0.9rem;
+    color: var(--texto);
+    background: var(--blanco);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    outline: none;
+  }
+  .form-grupo input:focus,
+  .form-grupo select:focus,
+  .form-grupo textarea:focus {
+    border-color: var(--azul-claro);
+    box-shadow: 0 0 0 3px rgba(26,109,181,0.12);
+  }
+  .form-grupo textarea { min-height: 130px; resize: vertical; }
+  .form-grupo .ayuda {
+    font-size: 0.78rem;
+    color: var(--texto-sec);
+    font-family: Arial, sans-serif;
+    margin-top: 0.3rem;
+  }
+  .checkbox-grupo {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+  }
+  .checkbox-grupo input[type="checkbox"] {
+    width: 17px; height: 17px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    accent-color: var(--azul);
+  }
+  .checkbox-grupo label {
+    font-size: 0.87rem;
+    font-family: Arial, sans-serif;
+    color: var(--texto-sec);
+    cursor: pointer;
+  }
+  .btn-principal {
+    background: var(--azul);
+    color: #fff;
+    border: none;
+    border-radius: var(--radio);
+    padding: 0.8rem 2.2rem;
+    font-family: Arial, sans-serif;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .btn-principal:hover { background: var(--azul-claro); }
+  .btn-principal:active { transform: scale(0.98); }
+  .btn-secundario {
+    background: none;
+    color: var(--azul);
+    border: 1px solid var(--azul);
+    border-radius: var(--radio);
+    padding: 0.75rem 1.5rem;
+    font-family: Arial, sans-serif;
+    font-size: 0.87rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-secundario:hover { background: var(--azul-fondo); }
+  .progreso-bar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 2rem;
+  }
+  .prog-circulo {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--gris-borde);
+    color: var(--texto-sec);
+    font-size: 0.8rem;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .prog-circulo.activo { background: var(--azul); color: #fff; }
+  .prog-circulo.hecho { background: var(--verde); color: #fff; }
+  .prog-linea {
+    flex: 1;
+    height: 2px;
+    background: var(--gris-borde);
+    margin: 0 4px;
+  }
+  .prog-linea.activa { background: var(--azul); }
+  .prog-etiqueta {
+    font-size: 0.75rem;
+    font-family: Arial, sans-serif;
+    color: var(--texto-sec);
+    text-align: center;
+    margin-top: 4px;
+  }
+  .prog-step-wrap { display: flex; flex-direction: column; align-items: center; flex: 1; }
+  .norma-card {
+    background: var(--blanco);
+    border: 1px solid var(--gris-borde);
+    border-radius: var(--radio-lg);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .norma-card h3 {
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+    color: var(--azul);
+  }
+  .norma-card p {
+    font-size: 0.88rem;
+    color: var(--texto-sec);
+    font-family: Arial, sans-serif;
+    margin-bottom: 0.6rem;
+  }
+  .exito-overlay {
+    display: none;
+    background: rgba(15,76,129,0.07);
+    border: 1px solid #a7f3d0;
+    border-radius: var(--radio-lg);
+    padding: 2.5rem;
+    text-align: center;
+    margin-top: 1rem;
+  }
+  .exito-overlay.visible { display: block; }
+  .exito-circulo {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: var(--verde-fondo);
+    margin: 0 auto 1.25rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+  }
+  .exito-overlay h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--verde);
+  }
+  .exito-overlay p {
+    font-size: 0.9rem;
+    color: var(--texto-sec);
+    font-family: Arial, sans-serif;
+    margin-bottom: 0.4rem;
+  }
+  .codigo-ref {
+    font-family: 'Courier New', monospace;
+    font-size: 1.05rem;
+    font-weight: bold;
+    background: var(--gris);
+    border: 1px solid var(--gris-borde);
+    border-radius: var(--radio);
+    padding: 0.5rem 1.2rem;
+    display: inline-block;
+    margin: 0.75rem 0 1rem;
+    color: var(--azul);
+    letter-spacing: 2px;
+  }
+  .paso-contenido { display: none; }
+  .paso-contenido.activo { display: block; }
+  .paso-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--gris-borde);
+  }
+  .footer-aviso {
+    background: var(--azul-fondo);
+    border-top: 1px solid var(--gris-borde);
+    padding: 1rem 2rem;
+    text-align: center;
+    font-size: 0.78rem;
+    font-family: Arial, sans-serif;
+    color: var(--texto-sec);
+  }
+  @media (max-width: 640px) {
+    .form-fila { grid-template-columns: 1fr; }
+    .contenido { padding: 1rem; }
+    .cabecera-inner { padding: 1.5rem 1rem 1rem; flex-direction: column; gap: 0.75rem; }
+    .cabecera h1 { font-size: 1.3rem; }
+    .nav-tabs-inner { padding: 0 0.5rem; }
+    .tab-btn { padding: 0.75rem 0.7rem; font-size: 0.78rem; }
+    .form-card { padding: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="cabecera">
+  <div class="cabecera-inner">
+    <div class="cabecera-icono">🛡️</div>
+    <div>
+      <div style="font-size:0.75rem; opacity:0.65; font-family:Arial,sans-serif; letter-spacing:1.2px; text-transform:uppercase; margin-bottom:0.3rem;">Gascón Gestión Empresarial</div>
+      <h1>Canal de Denuncias Interno</h1>
+      <p>Comunicación confidencial y segura. Ley 2/2023 y Directiva UE 2019/1937.</p>
+    </div>
+  </div>
+</header>
+
+<nav class="nav-tabs">
+  <div class="nav-tabs-inner">
+    <button class="tab-btn activo" onclick="mostrarSeccion('inicio', this)">Inicio</button>
+    <button class="tab-btn" onclick="mostrarSeccion('formulario', this)">Presentar denuncia</button>
+    <button class="tab-btn" onclick="mostrarSeccion('consulta', this)">Consultar expediente</button>
+    <button class="tab-btn" onclick="mostrarSeccion('normativa', this)">Normativa</button>
+  </div>
+</nav>
+
+<main class="contenido">
+
+<section id="sec-inicio" class="seccion activa">
+
+  <div class="alerta info">
+    <span class="alerta-icon">ℹ️</span>
+    <div>
+      <strong>Protección garantizada.</strong> Este canal cumple con la Ley 2/2023. Todos tus derechos están protegidos por ley.
+    </div>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="ic-header">
+        <div class="ic-dot azul">🔒</div>
+        <h3>Confidencialidad total</h3>
+      </div>
+      <p>Tu identidad está protegida. Las denuncias anónimas son válidas y tramitadas con diligencia.</p>
+    </div>
+    <div class="info-card">
+      <div class="ic-header">
+        <div class="ic-dot verde">⚖️</div>
+        <h3>Sin represalias</h3>
+      </div>
+      <p>La Ley 2/2023 prohíbe represalias contra el informante.</p>
+    </div>
+    <div class="info-card">
+      <div class="ic-header">
+        <div class="ic-dot amarillo">📋</div>
+        <h3>Seguimiento</h3>
+      </div>
+      <p>Recibe un código de referencia para consultar tu caso.</p>
+    </div>
+    <div class="info-card">
+      <div class="ic-header">
+        <div class="ic-dot azul">⏱️</div>
+        <h3>Plazos garantizados</h3>
+      </div>
+      <p>Respuesta en máximo 3 meses (prorrogable a 6).</p>
+    </div>
+  </div>
+
+  <div class="norma-card">
+    <h3>¿Qué puedo denunciar?</h3>
+    <ul style="font-size:0.88rem; font-family:Arial,sans-serif; color:var(--texto-sec); padding-left:1.25rem; line-height:1.9;">
+      <li>Fraude fiscal o tributario</li>
+      <li>Irregularidades financieras</li>
+      <li>Acoso laboral o discriminación</li>
+      <li>Protección de datos (RGPD)</li>
+      <li>Blanqueo de capitales</li>
+      <li>Seguridad y salud laboral</li>
+      <li>Cualquier otra infracción normativa</li>
+    </ul>
+  </div>
+
+  <div style="text-align:center; margin-top:2rem;">
+    <button class="btn-principal" onclick="mostrarSeccion('formulario', document.querySelectorAll('.tab-btn')[1])">
+      📝 Presentar denuncia
+    </button>
+  </div>
+
+</section>
+
+<section id="sec-formulario" class="seccion">
+
+  <div class="progreso-bar">
+    <div class="prog-step-wrap">
+      <div class="prog-circulo activo" id="pc1">1</div>
+      <div class="prog-etiqueta">Categoría</div>
+    </div>
+    <div class="prog-linea" id="pl1"></div>
+    <div class="prog-step-wrap">
+      <div class="prog-circulo" id="pc2">2</div>
+      <div class="prog-etiqueta">Descripción</div>
+    </div>
+    <div class="prog-linea" id="pl2"></div>
+    <div class="prog-step-wrap">
+      <div class="prog-circulo" id="pc3">3</div>
+      <div class="prog-etiqueta">Identificación</div>
+    </div>
+    <div class="prog-linea" id="pl3"></div>
+    <div class="prog-step-wrap">
+      <div class="prog-circulo" id="pc4">4</div>
+      <div class="prog-etiqueta">Revisión</div>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <div id="paso1" class="paso-contenido activo">
+      <h2>Paso 1 — Categoría</h2>
+      <p class="subtitulo">Selecciona el tipo de conducta a denunciar.</p>
+
+      <div class="form-grupo">
+        <label>Área de la infracción <span class="obligatorio">*</span></label>
+        <select id="area">
+          <option value="">— Selecciona —</option>
+          <option value="fiscal">Fraude fiscal o tributario</option>
+          <option value="contabilidad">Irregularidades financieras</option>
+          <option value="laboral">Acoso laboral o discriminación</option>
+          <option value="datos">Protección de datos (RGPD)</option>
+          <option value="blanqueo">Blanqueo de capitales</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+
+      <div class="paso-nav">
+        <div></div>
+        <button class="btn-principal" onclick="irPaso(2)">Siguiente →</button>
+      </div>
+    </div>
+
+    <div id="paso2" class="paso-contenido">
+      <h2>Paso 2 — Descripción</h2>
+      <p class="subtitulo">Describe los hechos con detalle.</p>
+
+      <div class="form-grupo">
+        <label>Descripción <span class="obligatorio">*</span></label>
+        <textarea id="descripcion" placeholder="¿Qué ocurrió? ¿Cuándo? ¿Dónde?"></textarea>
+      </div>
+
+      <div class="form-grupo">
+        <label>Fecha aproximada</label>
+        <input type="date" id="fecha-hechos">
+      </div>
+
+      <div class="paso-nav">
+        <button class="btn-secundario" onclick="irPaso(1)">← Anterior</button>
+        <button class="btn-principal" onclick="irPaso(3)">Siguiente →</button>
+      </div>
+    </div>
+
+    <div id="paso3" class="paso-contenido">
+      <h2>Paso 3 — Identificación</h2>
+      <p class="subtitulo">Elige si deseas ser anónimo o identificarte.</p>
+
+      <div class="form-grupo">
+        <label>Modalidad <span class="obligatorio">*</span></label>
+        <select id="modalidad" onchange="toggleIdentificacion()">
+          <option value="anonima">Anónima</option>
+          <option value="confidencial">Confidencial (con mis datos)</option>
+        </select>
+      </div>
+
+      <div id="bloque-identificacion" style="display:none">
+        <div class="form-grupo">
+          <label>Nombre completo</label>
+          <input type="text" id="nombre" placeholder="Tu nombre">
+        </div>
+        <div class="form-grupo">
+          <label>Email</label>
+          <input type="email" id="email" placeholder="tu@email.com">
+        </div>
+      </div>
+
+      <div class="paso-nav">
+        <button class="btn-secundario" onclick="irPaso(2)">← Anterior</button>
+        <button class="btn-principal" onclick="irPaso(4)">Siguiente →</button>
+      </div>
+    </div>
+
+    <div id="paso4" class="paso-contenido">
+      <h2>Paso 4 — Confirmación</h2>
+      <p class="subtitulo">Revisa y envía tu denuncia.</p>
+
+      <div class="checkbox-grupo">
+        <input type="checkbox" id="acepto-veracidad">
+        <label for="acepto-veracidad">Declaro que los hechos son veraces.</label>
+      </div>
+
+      <div class="checkbox-grupo">
+        <input type="checkbox" id="acepto-politica">
+        <label for="acepto-politica">Acepto la política de privacidad.</label>
+      </div>
+
+      <div class="paso-nav">
+        <button class="btn-secundario" onclick="irPaso(3)">← Anterior</button>
+        <button class="btn-principal" onclick="enviarDenuncia()">✅ Enviar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="exito-overlay" id="exito-envio">
+    <div class="exito-circulo">✅</div>
+    <h2>¡Denuncia recibida!</h2>
+    <p>Tu código de referencia:</p>
+    <div class="codigo-ref" id="codigo-generado">DN-2024-00001</div>
+    <p>Guárdalo para consultar el estado de tu caso.</p>
+    <div style="margin-top:1.5rem;">
+      <button class="btn-principal" onclick="mostrarSeccion('consulta', document.querySelectorAll('.tab-btn')[2])">Consultar expediente</button>
+    </div>
+  </div>
+
+</section>
+
+<section id="sec-consulta" class="seccion">
+
+  <h2 style="margin-bottom:1.5rem;">Consultar expediente</h2>
+
+  <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:2rem;">
+    <input type="text" id="codigo-consulta" placeholder="Ingresa tu código DN-XXXX-XXXXX" style="flex:1; min-width:200px; border:1px solid var(--gris-borde); border-radius:8px; padding:0.65rem 0.85rem; font-family:Arial,sans-serif;">
+    <button class="btn-principal" onclick="consultarExpediente()">Consultar</button>
+  </div>
+
+  <div id="resultado-consulta" style="display:none; background:var(--verde-fondo); border:1px solid #a7f3d0; border-radius:8px; padding:1.5rem;">
+    <h3 style="color:var(--verde); margin-bottom:1rem;">Expediente encontrado</h3>
+    <p><strong>Estado:</strong> En trámite</p>
+    <p><strong>Fecha de entrada:</strong> <span id="exp-fecha">-</span></p>
+  </div>
+
+</section>
+
+<section id="sec-normativa" class="seccion">
+
+  <h2 style="margin-bottom:1.5rem;">Marco normativo</h2>
+
+  <div class="norma-card">
+    <h3>Ley 2/2023</h3>
+    <p>Reguladora de la protección de las personas que informen sobre infracciones normativas. Transpone la Directiva (UE) 2019/1937.</p>
+  </div>
+
+  <div class="norma-card">
+    <h3>RGPD y LOPDGDD</h3>
+    <p>Protección de datos personales. Tus datos se tratan con máxima confidencialidad.</p>
+  </div>
+
+</section>
+
+</main>
+
+<footer class="footer-aviso">
+  © 2024 Gascón Gestión Empresarial. Todos los derechos reservados.
+</footer>
+
+<script>
+function mostrarSeccion(id, btn) {
+  document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('activo'));
+  document.getElementById('sec-' + id).classList.add('activa');
+  if (btn) btn.classList.add('activo');
+}
+
+function irPaso(paso) {
+  document.querySelectorAll('.paso-contenido').forEach(p => p.classList.remove('activo'));
+  document.getElementById('paso' + paso).classList.add('activo');
+  actualizarProgreso(paso);
+}
+
+function actualizarProgreso(paso) {
+  for (let i = 1; i <= 4; i++) {
+    const circulo = document.getElementById('pc' + i);
+    const linea = document.getElementById('pl' + i);
+    if (i < paso) {
+      circulo.classList.remove('activo');
+      circulo.classList.add('hecho');
+      if (linea) linea.classList.add('activa');
+    } else if (i === paso) {
+      circulo.classList.add('activo');
+      circulo.classList.remove('hecho');
+    } else {
+      circulo.classList.remove('activo', 'hecho');
+      if (linea) linea.classList.remove('activa');
+    }
+  }
+}
+
+function toggleIdentificacion() {
+  const modalidad = document.getElementById('modalidad').value;
+  document.getElementById('bloque-identificacion').style.display = 
+    modalidad === 'confidencial' ? 'block' : 'none';
+}
+
+function enviarDenuncia() {
+  if (!document.getElementById('acepto-veracidad').checked || !document.getElementById('acepto-politica').checked) {
+    alert('Debes aceptar los términos');
+    return;
+  }
+  const codigo = 'DN-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 100000).toString().padStart(5, '0');
+  document.getElementById('codigo-generado').textContent = codigo;
+  document.getElementById('exito-envio').classList.add('visible');
+}
+
+function consultarExpediente() {
+  const codigo = document.getElementById('codigo-consulta').value;
+  if (!codigo) {
+    alert('Ingresa un código');
+    return;
+  }
+  document.getElementById('exp-fecha').textContent = new Date().toLocaleDateString('es-ES');
+  document.getElementById('resultado-consulta').style.display = 'block';
+}
+</script>
+
+</body>
+</html>
