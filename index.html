@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canal de Denuncias — Gascón Gestión Empresarial</title>
+<style>
+  :root {
+    --azul: #0f4c81;
+    --azul-claro: #1a6db5;
+    --azul-fondo: #e8f0f9;
+    --gris: #f5f6f8;
+    --gris-borde: #dce2ea;
+    --texto: #1a1d23;
+    --texto-sec: #5a6272;
+    --blanco: #ffffff;
+    --verde: #1a7a45;
+    --verde-fondo: #e8f5ee;
+    --rojo: #b91c1c;
+    --rojo-fondo: #fef2f2;
+    --amarillo-fondo: #fffbeb;
+    --amarillo: #92400e;
+    --radio: 8px;
+    --radio-lg: 12px;
+    --sombra: 0 2px 12px rgba(15,76,129,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--gris);
+    color: var(--texto);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+  /* ——— HEADER ——— */
+  .cabecera {
+    background: var(--azul);
+    color: #fff;
+    padding: 0;
+  }
+  .cabecera-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+  .cabecera-icono {
+    width: 56px; height: 56px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 26px;
+  }
+  .cabecera h1 {
+    font-size: 1.7rem;
+    font-weight: normal;
+    letter-spacing: -0.3px;
+    margin-bottom: 0.35rem;
+  }
+  .cabecera p {
+    font-size: 0.92rem;
+    opacity: 0.82;
+    font-family: Arial, sans-serif;
+    max-width: 560px;
+  }
+  /* ——— NAV PESTAÑAS ——— */
+  .nav-tabs {
+    background: var(--azul);
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+  .nav-tabs-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+    padding: 0 2rem;
+    overflow-x: auto;
+  }
+  .tab-btn {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.65);
+    font-family: Arial, sans-serif;
+    font-size: 0.85rem;
+    padding: 0.85rem 1.1rem;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 3px solid transparent;
+    transition: all 0.15s;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+  .tab-btn:hover { color: #fff; background: rgba(255,255,255,0.07); }
+  .tab-btn.activo { color: #fff; border-bottom-color: #fff; }
+  /* ——— CONTENIDO ——— */
+  .contenido {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  .seccion { display: none; }
+  .seccion.activa { display: block; }
+  /* ——— TARJETAS INFO ——— */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .info-card {
+    background: var(--blanco);
+    border: 1px solid var(--gris-borde);
+    border-radius: var(--radio-lg);
+    padding: 1.25rem;
+  }
+  .info-card .ic-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 0.6rem;
+  }
+  .ic-dot {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+  }
+  .ic-dot.azul { background: var(--azul-fondo); }
+  .ic-dot.verde { background: var(--verde-fondo); }
+  .ic-dot.amarillo { background: var(--amarillo-fondo); }
+  .info-card h3 {
+    font-size: 0.88rem;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    color: var(--texto);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .info-card p {
+    font-size: 0.88rem;
+    color: var(--texto-sec);
+    font-family: Arial, sans-serif;
+  }
+  /* ——— CAJA ALERTA ——— */
+  .alerta {
+    border-radius: var(--radio);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    font-family: Arial, sans-serif;
+    font-size: 0.9rem;
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+  .alerta.info { background: var(--azul-fondo); color: #0c3461; border-left: 4px solid var(--azul-claro); }
+  .alerta.aviso { background: var(--amarillo-fondo); color: var(--amarillo); border-left: 4px solid #d97706; }
+  .alerta.exito { background: var(--verde-fondo); color: #14532d; border-left: 4px solid var(--verde); }
+  .alerta-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  /* ——— FORMULARIO ——— */
+  .form-card {
+    background: var(--blanco);
+    border: 1px solid var(--gris-borde);
+    border-radius: var(--radio-lg);
+    padding: 2rem;
+    box-shadow: var(--sombra);
+  }
+  .form-card h2 {
+    font-size: 1.15rem;
+    margin-bottom: 0.25rem;
+    font-weight: normal;
+  }
+  .form-card .subtitulo {
+    font-size: 0.87rem;
+    color: var(--texto-sec);
+    font-family: Arial, sans-serif;
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--gris-borde);
+  }
+  .form-fila {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  .form-grupo {
+    margin-bottom: 1rem;
+  }
+  .form-grupo label {
+    display: block;
+    font-size: 0.83rem;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    color: var(--texto);
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .form-grupo label .obligatorio { color: var(--rojo); }
+  .form-grupo input,
+  .form-grupo select,
+  .form-grupo textarea {
+    width: 100%;
+    border: 1px solid var(--gris-borde);
+    border-radius: var(--radio);
+    padding: 0.65rem 0.85rem;
+    font-family: Arial, sans-serif;
+    font-size: 0.9rem;
+    color: var(--texto);
+    background: var(--blanco);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    outline: none;
+  }
+  .form-grupo input:focus,
+  .form-grupo select:focus,
+  .form-grupo textarea:focus {
+    border-color: var(--azul-claro);
+    box-shadow: 0 0 0 3px rgba(26,109,181,0.12);
+  }
+  .form-grupo textarea { min-height: 130px; resize: vertical; }
+  .form-grupo .ayuda {
+    font-size: 0.78rem;
+    color: var(--texto-sec);
+    font-family: Arial, sans-serif;
+    margin-top: 0.3rem;
+  }
+  .checkbox-grupo {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+  }
+  .checkbox-grupo input[type="checkbox"] {
+    width: 17px; height: 17px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    accent-color: var(--azul);
+  }
+  .checkbox-grupo label {
+    font-size: 0.87rem;
+    font-family: Arial, sans-serif;
+    color: var(--texto-sec);
+    cursor: pointer;
+  }
+  .checkbox-grupo a { color: var(--azul-claro); }
+  .btn-principal {
+    background: var(--azul);
+    color: #fff;
+    border: none;
+    border-radius: var(--radio);
+    padding: 0.8rem 2.2rem;
+    font-family: Arial, sans-serif;
+    font-size: 0.95rem;
+    font-weight: bold;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .btn-principal:hover { background: var(--azul-claro); }
+  .btn-principal:active { transform: scale(0.98); }
+  .btn-secundario {
+    background: none;
+    color: var(--azul);
+    border: 1px solid var(--azul);
+    border-radius: var(--radio);
+    padding: 0.75rem 1.5rem;
+    font-family: Arial, sans-serif;
+    font-size: 0.87rem;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-secundario:hover { background: var(--azul-fondo); }
+  /* ——— PROGRESO ——— */
+  .progreso-bar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 2rem;
+  }
+  .prog-paso {
+    display: flex;
+    align-items: center;
+    flex: 1;
+  }
+  .prog-circulo {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--gris-borde);
+    color: var(--texto-sec);
+    font-size: 0.8rem;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .prog-circulo.activo { background: var(--azul); color: #fff; }
+  .prog-circulo.hecho { background: var(--verde); color: #fff; }
+  .prog-linea {
+    flex: 1;
+    height: 2px;
+    background: var(--gris-borde);
+    margin: 0 4px;
+  }
+  .prog-linea.activa { background: var(--azul); }
+  .prog-etiqueta {
+    font-size: 0.75rem;
+    font-family: Arial, sans-serif;
+    color: var(--texto-sec);
+    text-align: center;
+    margin-top: 4px;
+  }
+  .prog-step-wrap { display: flex; flex-direction: column; align-items: center; }
+  /* ——— NORMATIVA ——— */
+  .norma-card {
+    background: var(--blanco);
+    border: 1px solid var(--gris-borde);
+    border-radius: var(--radio-lg);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .norma-card h3 {
+    font-size: 1rem;
+    margin-bottom: 0.4rem;
+    color: var(--azul);
+  }
+  .norma-card p {
+    font-size: 0.88rem;
+    color: var(--texto-sec);
+    font-family: Arial, sans-serif;
+    margin-bottom: 0.6rem;
+  }
+  .badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .badge-azul { background: var(--azul-fondo); color: var(--azul); }
+  .badge-verde { background: var(--verde-fondo); color: var(--verde); }
+  .badge-gris { background: var(--gris); color: var(--texto-sec); border: 1px solid var(--gris-borde); }
+  /* ——— CONSULTA EXPEDIENTE ——— */
+  .consulta-box {
+    background: var(--blanco);
+    border: 1px solid var(--gris-borde);
+    border-radius: var(--radio-lg);
+    padding: 2rem;
+    box-shadow: var(--sombra);
+    margin-bottom: 1.5rem;
+  }
+  .expediente-estado {
+    background: var(--verde-fondo);
+    border: 1px solid #a7f3d0;
+    border-radius: var(--radio);
+    padding: 1rem 1.25rem;
+    margin-top: 1.5rem;
+    display: none;
+  }
+  .expediente-estado .estado-titulo {
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    color: var(--verde);
+    font-size: 0.95rem;
+    margin-bottom: 0.25rem;
+  }
+  .timeline {
+    margin-top: 1rem;
+    border-left: 2px solid var(--gris-borde);
+    padding-left: 1.25rem;
+  }
+  .tl-item {
+    margin-bottom: 1rem;
+    position: relative;
+  }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -1.45rem;
+    top: 5px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--azul);
+    border: 2px solid var(--blanco);
+    box-shadow: 0 0 0 2px var(--gris-borde);
+  }
+  .tl-item.pendiente::before { background: var(--gris-borde); }
+  .tl-fecha {
+    font-size: 0.75rem;
+    font-family: Arial, sans-serif;
+    color: var(--texto-sec);
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+  .tl-desc {
+    font-size: 0.9rem;
+    font-family: Arial, sans-serif;
+    color: var(--texto);
+  }
+  /* ——— POLÍTICA ——— */
+  .politica-contenido h2 {
+    font-size: 1.05rem;
+    margin: 1.5rem 0 0.5rem;
+    color: var(--azul);
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+  }
+  .politica-contenido p, .politica-contenido li {
+    font-size: 0.9rem;
+    font-family: Arial, sans-serif;
+    color: var(--texto);
+    line-height: 1.7;
+    margin-bottom: 0.6rem;
+  }
+  .politica-contenido ul, .politica-contenido ol {
+    padding-left: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .politica-contenido table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.87rem;
+    font-family: Arial, sans-serif;
+    margin-bottom: 1rem;
+  }
+  .politica-contenido th {
+    background: var(--azul-fondo);
+    color: var(--azul);
+    padding: 0.6rem 0.8rem;
+    text-align: left;
+    font-weight: bold;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .politica-contenido td {
+    padding: 0.6rem 0.8rem;
+    border-bottom: 1px solid var(--gris-borde);
+    color: var(--texto);
+  }
+  .politica-contenido tr:last-child td { border-bottom: none; }
+  /* ——— ÉXITO MODAL ——— */
+  .exito-overlay {
+    display: none;
+    background: rgba(15,76,129,0.07);
+    border: 1px solid #a7f3d0;
+    border-radius: var(--radio-lg);
+    padding: 2.5rem;
+    text-align: center;
+    margin-top: 1rem;
+  }
+  .exito-overlay.visible { display: block; }
+  .exito-circulo {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: var(--verde-fondo);
+    margin: 0 auto 1.25rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+  }
+  .exito-overlay h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: var(--verde);
+  }
+  .exito-overlay p {
+    font-size: 0.9rem;
+    color: var(--texto-sec);
+    font-family: Arial, sans-serif;
+    margin-bottom: 0.4rem;
+  }
+  .codigo-ref {
+    font-family: 'Courier New', monospace;
+    font-size: 1.05rem;
+    font-weight: bold;
+    background: var(--gris);
+    border: 1px solid var(--gris-borde);
+    border-radius: var(--radio);
+    padding: 0.5rem 1.2rem;
+    display: inline-block;
+    margin: 0.75rem 0 1rem;
+    color: var(--azul);
+    letter-spacing: 2px;
+  }
+  /* ——— RESPONSIVO ——— */
+  @media (max-width: 640px) {
+    .form-fila { grid-template-columns: 1fr; }
+    .contenido { padding: 1rem; }
+    .cabecera-inner { padding: 1.5rem 1rem 1rem; flex-direction: column; gap: 0.75rem; }
+    .cabecera h1 { font-size: 1.3rem; }
+    .nav-tabs-inner { padding: 0 0.5rem; }
+    .tab-btn { padding: 0.75rem 0.7rem; font-size: 0.78rem; }
+    .form-card { padding: 1.25rem; }
+  }
+  /* ——— PASO STEPPER ——— */
+  .paso-contenido { display: none; }
+  .paso-contenido.activo { display: block; }
+  .paso-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--gris-borde);
+  }
+  /* ——— FOOTER ——— */
+  .footer-aviso {
+    background: var(--azul-fondo);
+    border-top: 1px solid var(--gris-borde);
+    padding: 1rem 2rem;
+    text-align: center;
+    font-size: 0.78rem;
+    font-family: Arial, sans-serif;
+    color: var(--texto-sec);
+    max-width: 100%;
+  }
+  .footer-aviso a { color: var(--azul-claro); }
+</style>
+</head>
+<body>
+
+<!-- CABECERA -->
+<header class="cabecera">
+  <div class="cabecera-inner">
+    <div class="cabecera-icono">🛡️</div>
+    <div>
+      <div style="font-size:0.75rem; opacity:0.65; font-family:Arial,sans-serif; letter-spacing:1.2px; text-transform:uppercase; margin-bottom:0.3rem;">Gascón Gestión Empresarial</div>
+      <h1>Canal de Denuncias Interno</h1>
+      <p>Comunicación confidencial y segura de irregularidades. Conforme a la Ley 2/2023 de protección del informante y Directiva UE 2019/1937.</p>
+    </div>
+  </div>
+</header>
+
+<!-- NAVEGACIÓN -->
+<nav class="nav-tabs" role="navigation">
+  <div class="nav-tabs-inner">
+    <button class="tab-btn activo" onclick="mostrarSeccion('inicio', this)">Inicio</button>
+    <button class="tab-btn" onclick="mostrarSeccion('formulario', this)">Presentar denuncia</button>
+    <button class="tab-btn" onclick="mostrarSeccion('consulta', this)">Consultar expediente</button>
+    <button class="tab-btn" onclick="mostrarSeccion('normativa', this)">Normativa</button>
+    <button class="tab-btn" onclick="mostrarSeccion('politica', this)">Política interna</button>
+  </div>
+</nav>
+
+<!-- ═══════════ SECCIÓN: INICIO ═══════════ -->
+<main class="contenido">
+
+<section id="sec-inicio" class="seccion activa">
+
+  <div class="alerta info">
+    <span class="alerta-icon">ℹ️</span>
+    <div>
+      <strong>Protección garantizada.</strong> Este canal cumple con la Ley 2/2023, de 20 de febrero, reguladora de la protección de las personas que informen sobre infracciones normativas. Toda comunicación es confidencial y puede realizarse de forma anónima.
+    </div>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="ic-header">
+        <div class="ic-dot azul">🔒</div>
+        <h3>Confidencialidad total</h3>
+      </div>
+      <p>Tu identidad está protegida. Las denuncias anónimas son igualmente válidas y tramitadas con la misma diligencia.</p>
+    </div>
+    <div class="info-card">
+      <div class="ic-header">
+        <div class="ic-dot verde">⚖️</div>
+        <h3>Sin represalias</h3>
+      </div>
+      <p>La Ley 2/2023 prohíbe expresamente cualquier represalia contra el informante. El incumplimiento está sancionado.</p>
+    </div>
+    <div class="info-card">
+      <div class="ic-header">
+        <div class="ic-dot amarillo">📋</div>
+        <h3>Seguimiento del caso</h3>
+      </div>
+      <p>Recibirás un código de referencia para consultar el estado de tu denuncia en cualquier momento.</p>
+    </div>
+    <div class="info-card">
+      <div class="ic-header">
+        <div class="ic-dot azul">⏱️</div>
+        <h3>Plazos garantizados</h3>
+      </div>
+      <p>Acuse de recibo en 7 días. Respuesta motivada en un máximo de 3 meses (prorrogable a 6).</p>
+    </div>
+  </div>
+
+  <div class="norma-card">
+    <h3>¿Qué conductas puedo denunciar?</h3>
+    <p>Las siguientes infracciones entran dentro del ámbito de este canal de denuncias:</p>
+    <ul style="font-size:0.88rem; font-family:Arial,sans-serif; color:var(--texto-sec); padding-left:1.25rem; line-height:1.9;">
+      <li>Infracciones tributarias, fiscales o de contabilidad</li>
+      <li>Irregularidades en la gestión de fondos o patrimonio de la empresa</li>
+      <li>Conductas contrarias al Código Ético o al Reglamento Interno</li>
+      <li>Acoso laboral, sexual o discriminatorio</li>
+      <li>Conflictos de interés no declarados</li>
+      <li>Delitos contra la Hacienda Pública o la Seguridad Social</li>
+      <li>Blanqueo de capitales o financiación del terrorismo</li>
+      <li>Infracciones de protección de datos (RGPD / LOPDGDD)</li>
+      <li>Vulneraciones del Derecho de la Unión Europea</li>
+      <li>Cualquier otra conducta delictiva o ilícita de la que tengas conocimiento</li>
+    </ul>
+  </div>
+
+  <div class="alerta aviso">
+    <span class="alerta-icon">⚠️</span>
+    <div>
+      <strong>Uso responsable.</strong> Este canal está destinado a comunicar irregularidades reales. Las denuncias de mala fe o manifiestamente falsas pueden tener consecuencias legales para el denunciante. No utilices este canal para asuntos laborales ordinarios o quejas de gestión.
+    </div>
+  </div>
+
+  <div style="text-align:center; margin-top:2rem;">
+    <button class="btn-principal" onclick="mostrarSeccion('formulario', document.querySelectorAll('.tab-btn')[1])">
+      📝 &nbsp; Presentar una denuncia ahora
+    </button>
+  </div>
+
+</section>
+
+<!-- ═══════════ SECCIÓN: FORMULARIO ═══════════ -->
+<section id="sec-formulario" class="seccion">
+
+  <!-- Progreso -->
+  <div class="progreso-bar">
+    <div class="prog-step-wrap">
+      <div class="prog-circulo activo" id="pc1">1</div>
+      <div class="prog-etiqueta">Categoría</div>
+    </div>
+    <div class="prog-linea" id="pl1"></div>
+    <div class="prog-step-wrap">
+      <div class="prog-circulo" id="pc2">2</div>
+      <div class="prog-etiqueta">Descripción</div>
+    </div>
+    <div class="prog-linea" id="pl2"></div>
+    <div class="prog-step-wrap">
+      <div class="prog-circulo" id="pc3">3</div>
+      <div class="prog-etiqueta">Identificación</div>
+    </div>
+    <div class="prog-linea" id="pl3"></div>
+    <div class="prog-step-wrap">
+      <div class="prog-circulo" id="pc4">4</div>
+      <div class="prog-etiqueta">Revisión</div>
+    </div>
+  </div>
+
+  <!-- PASO 1 -->
+  <div class="form-card">
+    <div id="paso1" class="paso-contenido activo">
+      <h2>Paso 1 — Categoría de la infracción</h2>
+      <p class="subtitulo">Selecciona el tipo de conducta que deseas comunicar. Esta clasificación ayuda a asignar el caso al responsable adecuado.</p>
+
+      <div class="form-grupo">
+        <label>Área de la infracción <span class="obligatorio">*</span></label>
+        <select id="area">
+          <option value="">— Selecciona una categoría —</option>
+          <option value="fiscal">Fraude fiscal o tributario</option>
+          <option value="contabilidad">Irregularidades contables o financieras</option>
+          <option value="laboral">Acoso laboral, sexual o discriminación</option>
+          <option value="datos">Protección de datos (RGPD)</option>
+          <option value="blanqueo">Blanqueo de capitales / financiación del terrorismo</option>
+          <option value="competencia">Competencia desleal o corrupción</option>
+          <option value="sstt">Seguridad y salud en el trabajo</option>
+          <option value="medioambiente">Infracciones medioambientales</option>
+          <option value="etica">Incumplimiento del Código Ético</option>
+          <option value="otro">Otro incumplimiento normativo</option>
+        </select>
+      </div>
+
+      <div class="form-grupo">
+        <label>Ámbito de la irregularidad <span class="obligatorio">*</span></label>
+        <select id="ambito">
+          <option value="">— Selecciona —</option>
+          <option value="interno">Conducta de un empleado o directivo</option>
+          <option value="proveedor">Conducta de un proveedor o colaborador externo</option>
+          <option value="cliente">Conducta de un cliente</option>
+          <option value="proceso">Fallo en un proceso interno</option>
+          <option value="otro">Otro ámbito</option>
+        </select>
+      </div>
+
+      <div class="form-grupo">
+        <label>Gravedad estimada</label>
+        <select id="gravedad">
+          <option value="alta">Alta — Infracción grave o continuada</option>
+          <option value="media">Media — Irregularidad puntual de cierta importancia</option>
+          <option value="baja">Baja — Incumplimiento leve o preventivo</option>
+          <option value="desconocida">No puedo determinarla</option>
+        </select>
+      </div>
+
+      <div class="paso-nav">
+        <div></div>
+        <button class="btn-principal" onclick="irPaso(2)">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- PASO 2 -->
+    <div id="paso2" class="paso-contenido">
+      <h2>Paso 2 — Descripción de los hechos</h2>
+      <p class="subtitulo">Describe con el mayor detalle posible los hechos que conoces. La información que aportes es clave para la investigación.</p>
+
+      <div class="form-grupo">
+        <label>Descripción de los hechos <span class="obligatorio">*</span></label>
+        <textarea id="descripcion" placeholder="Describe los hechos: qué ocurrió, cuándo, dónde, cómo lo conociste y qué impacto estima que puede tener..."></textarea>
+        <div class="ayuda">Mínimo 50 caracteres. No incluyas datos personales innecesarios de terceros.</div>
+      </div>
+
+      <div class="form-fila">
+        <div class="form-grupo">
+          <label>Fecha aproximada de los hechos</label>
+          <input type="date" id="fecha-hechos">
+        </div>
+        <div class="form-grupo">
+          <label>Lugar o departamento</label>
+          <input type="text" id="lugar" placeholder="Ej: Departamento de Contabilidad, Oficina Madrid...">
+        </div>
+      </div>
+
+      <div class="form-grupo">
+        <label>Persona(s) implicada(s) <span style="font-weight:normal; text-transform:none; font-size:0.8rem; color:var(--texto-sec)">(Opcional)</span></label>
+        <input type="text" id="implicados" placeholder="Nombre, cargo o descripción de los implicados si los conoces">
+        <div class="ayuda">Solo si es relevante para la investigación. Estos datos serán tratados con especial confidencialidad.</div>
+      </div>
+
+      <div class="form-grupo">
+        <label>¿Dispones de documentación o evidencias?</label>
+        <select id="evidencias">
+          <option value="no">No dispongo de evidencias</option>
+          <option value="documentos">Sí, tengo documentos (facturas, correos, contratos...)</option>
+          <option value="testigos">Sí, hay testigos de los hechos</option>
+          <option value="ambos">Sí, tengo documentos y testigos</option>
+        </select>
+        <div class="ayuda">Guarda de forma segura cualquier evidencia. Si deseas aportarla, indícalo y se te facilitará un canal seguro de entrega.</div>
+      </div>
+
+      <div class="paso-nav">
+        <button class="btn-secundario" onclick="irPaso(1)">← Anterior</button>
+        <button class="btn-principal" onclick="irPaso(3)">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- PASO 3 -->
+    <div id="paso3" class="paso-contenido">
+      <h2>Paso 3 — Identificación del informante</h2>
+      <p class="subtitulo">Puedes presentar tu denuncia de forma <strong>anónima</strong>. Si decides identificarte, tus datos están protegidos por la Ley 2/2023 y no serán revelados salvo obligación legal.</p>
+
+      <div class="form-grupo">
+        <label>Modalidad de comunicación <span class="obligatorio">*</span></label>
+        <select id="modalidad" onchange="toggleIdentificacion()">
+          <option value="anonima">Anónima — No facilito mis datos</option>
+          <option value="confidencial">Confidencial — Facilito mis datos solo al responsable del canal</option>
+        </select>
+      </div>
+
+      <div id="bloque-identificacion" style="display:none">
+        <div class="alerta info" style="margin-bottom:1rem;">
+          <span class="alerta-icon">🔐</span>
+          <span>Tus datos personales serán tratados de forma estrictamente confidencial, conforme al art. 32 de la Ley 2/2023, y nunca serán facilitados a la persona denunciada.</span>
+        </div>
+        <div class="form-fila">
+          <div class="form-grupo">
+            <label>Nombre completo</label>
+            <input type="text" id="nombre" placeholder="Tu nombre y apellidos">
+          </div>
+          <div class="form-grupo">
+            <label>DNI / NIE</label>
+            <input type="text" id="dni" placeholder="00000000A">
+          </div>
+        </div>
+        <div class="form-fila">
+          <div class="form-grupo">
+            <label>Correo electrónico</label>
+            <input type="email" id="email" placeholder="tucorreo@ejemplo.com">
+          </div>
+          <div class="form-grupo">
+            <label>Teléfono de contacto</label>
+            <input type="tel" id="telefono" placeholder="600 000 000">
+          </div>
+        </div>
+        <div class="form-grupo">
+          <label>Relación con la organización</label>
+          <select id="relacion">
+            <option value="empleado">Empleado/a de la empresa</option>
+            <option value="exempleado">Exempleado/a</option>
+            <option value="proveedor">Proveedor o colaborador externo</option>
+            <option value="cliente">Cliente</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-grupo">
+        <label>¿Deseas recibir comunicaciones sobre el expediente? <span class="obligatorio">*</span></label>
+        <select id="comunicaciones">
+          <option value="si">Sí, quiero ser notificado del estado del caso</option>
+          <option value="no">No, prefiero consultar el estado con el código de referencia</option>
+        </select>
+        <div class="ayuda" id="ayuda-email-seguimiento">Si eliges recibir notificaciones y la denuncia es anónima, deberás facilitar un correo electrónico temporal para el seguimiento.</div>
+      </div>
+
+      <div id="email-anonimo" style="display:none">
+        <div class="form-grupo">
+          <label>Correo para seguimiento anónimo</label>
+          <input type="email" id="email-seg" placeholder="Puede ser un correo temporal o alias">
+          <div class="ayuda">Recomendamos usar un correo que no identifique tu persona real.</div>
+        </div>
+      </div>
+
+      <div class="paso-nav">
+        <button class="btn-secundario" onclick="irPaso(2)">← Anterior</button>
+        <button class="btn-principal" onclick="irPaso(4)">Siguiente →</button>
+      </div>
+    </div>
+
+    <!-- PASO 4 -->
+    <div id="paso4" class="paso-contenido">
+      <h2>Paso 4 — Revisión y confirmación</h2>
+      <p class="subtitulo">Revisa el resumen de tu denuncia antes de enviarla. Una vez enviada, recibirás tu código de referencia.</p>
+
+      <div style="background:var(--gris); border-radius:var(--radio); padding:1.25rem; margin-bottom:1.5rem; font-family:Arial,sans-serif; font-size:0.88rem;" id="resumen-denuncia">
+        <!-- Se rellena con JS -->
+      </div>
+
+      <div class="checkbox-grupo">
+        <input type="checkbox" id="acepto-veracidad" name="veracidad">
+        <label for="acepto-veracidad">Declaro que los hechos comunicados son veraces según mi leal saber y entender, y que no actúo con mala fe ni ánimo de causar daño injustificado a terceros.</label>
+      </div>
+
+      <div class="checkbox-grupo">
+        <input type="checkbox" id="acepto-rgpd" name="rgpd">
+        <label for="acepto-rgpd">He leído y acepto la <a href="#" onclick="mostrarSeccion('politica', document.querySelectorAll('.tab-btn')[4]); return false;">Política de Privacidad del Canal de Denuncias</a> y el tratamiento de mis datos conforme a la Ley Orgánica 3/2018 (LOPDGDD) y el RGPD.</label>
+      </div>
+
+      <div class="checkbox-grupo">
+        <input type="checkbox" id="acepto-politica" name="politica">
+        <label for="acepto-politica">He leído y comprendo la <a href="#" onclick="mostrarSeccion('politica', document.querySelectorAll('.tab-btn')[4]); return false;">Política Interna del Canal de Denuncias</a>.</label>
+      </div>
+
+      <div class="alerta aviso" style="margin:1.25rem 0;">
+        <span class="alerta-icon">⚠️</span>
+        <span>Las denuncias falsas o realizadas de mala fe pueden constituir una infracción del art. 38 de la Ley 2/2023 y dar lugar a responsabilidad disciplinaria o legal.</span>
+      </div>
+
+      <div class="paso-nav">
+        <button class="btn-secundario" onclick="irPaso(3)">← Anterior</button>
+        <button class="btn-principal" onclick="enviarDenuncia()">✅ &nbsp; Enviar denuncia</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIRMACIÓN ÉXITO -->
+  <div class="exito-overlay" id="exito-envio">
+    <div class="exito-circulo">✅</div>
+    <h2>Denuncia recibida correctamente</h2>
+    <p>Tu comunicación ha sido registrada. Guarda tu código de referencia:</p>
+    <div class="codigo-ref" id="codigo-generado">—</div>
+    <p>Con este código podrás consultar el estado de tu expediente en la pestaña <strong>«Consultar expediente»</strong>.</p>
+    <p style="margin-top:0.5rem;">Recibirás acuse de recibo en el plazo máximo de <strong>7 días hábiles</strong>.</p>
+    <div style="margin-top:1.5rem; display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+      <button class="btn-principal" onclick="mostrarSeccion('consulta', document.querySelectorAll('.tab-btn')[2])">🔍 Consultar mi expediente</button>
+      <button class="btn-secundario" onclick="nuevaDenuncia()">Nueva denuncia</button>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══════════ SECCIÓN: CONSULTA ═══════════ -->
+<section id="sec-consulta" class="seccion">
+
+  <div class="alerta info">
+    <span class="alerta-icon">ℹ️</span>
+    <span>Introduce el código de referencia que recibiste al presentar tu denuncia. Los datos del expediente solo son visibles con dicho código.</span>
+  </div>
+
+  <div class="consulta-box">
+    <h2 style="font-size:1.1rem; margin-bottom:1.25rem;">Consultar estado del expediente</h2>
+    <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+      <input type="text" id="codigo-consulta" placeholder="Ej: DN-2024-00001" style="flex:1; min-width:200px; border:1px solid var(--gris-borde); border-radius:var(--radio); padding:0.65rem 0.85rem; font-family:Arial,sans-serif; font-size:0.9rem;">
+      <button class="btn-principal" onclick="consultarExpediente()">Consultar</button>
+    </div>
+
+    <div class="expediente-estado" id="resultado-consulta">
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.5rem; margin-bottom:1rem;">
+        <div>
+          <div class="estado-titulo" id="exp-estado">En trámite</div>
+          <div style="font-size:0.83rem; font-family:Arial,sans-serif; color:var(--texto-sec);" id="exp-codigo">Expediente: —</div>
+        </div>
+        <span class="badge badge-verde" id="exp-badge">ACTIVO</span>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; font-size:0.85rem; font-family:Arial,sans-serif; margin-bottom:1rem;">
+        <div><span style="color:var(--texto-sec)">Categoría:</span> <strong id="exp-cat">—</strong></div>
+        <div><span style="color:var(--texto-sec)">Fecha de entrada:</span> <strong id="exp-fecha">—</strong></div>
+        <div><span style="color:var(--texto-sec)">Modalidad:</span> <strong id="exp-modal">—</strong></div>
+        <div><span style="color:var(--texto-sec)">Plazo respuesta:</span> <strong id="exp-plazo">—</strong></div>
+      </div>
+      <div class="timeline" id="exp-timeline"></div>
+    </div>
+
+    <div id="resultado-no-encontrado" style="display:none; margin-top:1rem;">
+      <div class="alerta" style="background:var(--rojo-fondo); border-left:4px solid var(--rojo); color:#7f1d1d;">
+        <span class="alerta-icon">❌</span>
+        <span>No se ha encontrado ningún expediente con ese código. Verifica que el código es correcto y vuelve a intentarlo.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="norma-card">
+    <h3>¿Cuánto tarda la tramitación?</h3>
+    <div style="font-family:Arial,sans-serif; font-size:0.88rem; color:var(--texto-sec);">
+      <div style="display:flex; gap:1rem; margin-bottom:0.6rem; align-items:flex-start;">
+        <span style="font-weight:bold; color:var(--azul); min-width:36px;">7 días</span>
+        <span>Acuse de recibo al denunciante desde la recepción de la comunicación.</span>
+      </div>
+      <div style="display:flex; gap:1rem; margin-bottom:0.6rem; align-items:flex-start;">
+        <span style="font-weight:bold; color:var(--azul); min-width:36px;">3 meses</span>
+        <span>Plazo ordinario para dar respuesta motivada al denunciante.</span>
+      </div>
+      <div style="display:flex; gap:1rem; align-items:flex-start;">
+        <span style="font-weight:bold; color:var(--azul); min-width:36px;">6 meses</span>
+        <span>Plazo máximo (si las circunstancias lo requieren, con justificación).</span>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══════════ SECCIÓN: NORMATIVA ═══════════ -->
+<section id="sec-normativa" class="seccion">
+
+  <p style="font-family:Arial,sans-serif; font-size:0.9rem; color:var(--texto-sec); margin-bottom:1.5rem;">Marco normativo aplicable al canal de denuncias. Los textos normativos completos están disponibles en los repositorios oficiales indicados.</p>
+
+  <div class="norma-card">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
+      <h3>Ley 2/2023, de 20 de febrero</h3>
+      <span class="badge badge-azul">Principal</span>
+    </div>
+    <p>Reguladora de la protección de las personas que informen sobre infracciones normativas y de lucha contra la corrupción. Transpone la Directiva (UE) 2019/1937 al ordenamiento jurídico español.</p>
+    <p><strong>Puntos clave:</strong></p>
+    <ul style="font-size:0.87rem; font-family:Arial,sans-serif; color:var(--texto-sec); padding-left:1.25rem; line-height:1.9;">
+      <li>Obligación de implantar canal interno para entidades con 50 o más empleados</li>
+      <li>Prohibición absoluta de represalias contra el informante (art. 36)</li>
+      <li>Confidencialidad de identidad del denunciante (art. 32)</li>
+      <li>Plazo de 7 días para acuse de recibo; 3 meses para respuesta motivada</li>
+      <li>Régimen sancionador: infracciones muy graves hasta 1.000.000 € (personas jurídicas)</li>
+      <li>Inversión de la carga de la prueba en procedimientos sancionadores al denunciante</li>
+    </ul>
+    <div style="margin-top:0.75rem;">
+      <a href="https://www.boe.es/buscar/act.php?id=BOE-A-2023-4513" target="_blank" rel="noopener" style="font-size:0.83rem; font-family:Arial,sans-serif; color:var(--azul-claro);">📄 Ver texto completo en BOE →</a>
+    </div>
+  </div>
+
+  <div class="norma-card">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
+      <h3>Directiva (UE) 2019/1937 del Parlamento Europeo</h3>
+      <span class="badge badge-gris">UE</span>
+    </div>
+    <p>Relativa a la protección de las personas que informen sobre infracciones del Derecho de la Unión. Base de la transposición española realizada mediante la Ley 2/2023.</p>
+    <ul style="font-size:0.87rem; font-family:Arial,sans-serif; color:var(--texto-sec); padding-left:1.25rem; line-height:1.9;">
+      <li>Establece estándares mínimos de protección en todos los Estados Miembros</li>
+      <li>Define los canales de denuncia internos, externos y de divulgación pública</li>
+      <li>Regula las materias cubiertas: contratos públicos, servicios financieros, medio ambiente, salud pública, protección de datos, competencia, etc.</li>
+    </ul>
+  </div>
+
+  <div class="norma-card">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
+      <h3>Reglamento General de Protección de Datos (RGPD)</h3>
+      <span class="badge badge-gris">UE — Reglamento 2016/679</span>
+    </div>
+    <p>Las comunicaciones recibidas a través del canal de denuncias implican tratamiento de datos personales, por lo que resulta plenamente aplicable el RGPD y, en el ámbito nacional, la LOPDGDD (LO 3/2018).</p>
+  </div>
+
+  <div class="norma-card">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
+      <h3>Ley Orgánica 3/2018 — LOPDGDD</h3>
+      <span class="badge badge-gris">Nacional</span>
+    </div>
+    <p>Ley Orgánica de Protección de Datos Personales y garantía de los derechos digitales. Adapta el RGPD al Derecho interno español y regula el tratamiento de datos en el contexto laboral y corporativo.</p>
+  </div>
+
+  <div class="norma-card">
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.5rem;">
+      <h3>¿Cuándo es obligatorio el canal de denuncias?</h3>
+      <span class="badge badge-azul">Ámbito de aplicación</span>
+    </div>
+    <div style="overflow-x:auto;">
+    <table style="width:100%; border-collapse:collapse; font-size:0.87rem; font-family:Arial,sans-serif; margin-top:0.5rem;">
+      <thead>
+        <tr>
+          <th style="background:var(--azul-fondo); color:var(--azul); padding:0.6rem 0.8rem; text-align:left; font-weight:bold; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.3px;">Tipo de entidad</th>
+          <th style="background:var(--azul-fondo); color:var(--azul); padding:0.6rem 0.8rem; text-align:left; font-weight:bold; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.3px;">Umbral</th>
+          <th style="background:var(--azul-fondo); color:var(--azul); padding:0.6rem 0.8rem; text-align:left; font-weight:bold; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.3px;">Plazo implantación</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="padding:0.6rem 0.8rem; border-bottom:1px solid var(--gris-borde);">Sector privado</td><td style="padding:0.6rem 0.8rem; border-bottom:1px solid var(--gris-borde);">≥ 50 trabajadores</td><td style="padding:0.6rem 0.8rem; border-bottom:1px solid var(--gris-borde);">Ya obligatorio</td></tr>
+        <tr><td style="padding:0.6rem 0.8rem; border-bottom:1px solid var(--gris-borde);">Sector público (estatal, autonómico)</td><td style="padding:0.6rem 0.8rem; border-bottom:1px solid var(--gris-borde);">Todas las entidades</td><td style="padding:0.6rem 0.8rem; border-bottom:1px solid var(--gris-borde);">Ya obligatorio</td></tr>
+        <tr><td style="padding:0.6rem 0.8rem; border-bottom:1px solid var(--gris-borde);">Municipios &lt; 10.000 hab.</td><td style="padding:0.6rem 0.8rem; border-bottom:1px solid var(--gris-borde);">Pueden compartir canal</td><td style="padding:0.6rem 0.8rem; border-bottom:1px solid var(--gris-borde);">Según convocatoria</td></tr>
+        <tr><td style="padding:0.6rem 0.8rem;">Sector privado &lt; 50 trabajadores</td><td style="padding:0.6rem 0.8rem;">Voluntario (recomendado)</td><td style="padding:0.6rem 0.8rem;">—</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+</section>
+
+<!-- ═══════════ SECCIÓN: POLÍTICA ═══════════ -->
+<section id="sec-politica" class="seccion">
+
+  <div class="form-card politica-contenido">
+
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:0.75rem; margin-bottom:1rem; padding-bottom:1rem; border-bottom:1px solid var(--gris-borde);">
+      <div>
+        <h2 style="font-size:1.2rem; font-weight:normal; margin-bottom:0.2rem;">Política Interna del Canal de Denuncias</h2>
+        <div style="font-size:0.8rem; font-family:Arial,sans-serif; color:var(--texto-sec);">Versión 1.0 — Enero 2024 · Aprobada por la Dirección</div>
+      </div>
+      <span class="badge badge-azul">Documento oficial</span>
+    </div>
+
+    <h2>1. Objeto y ámbito de aplicación</h2>
+    <p>La presente Política regula el funcionamiento del Canal de Denuncias Interno de <strong>Gascón Gestión Empresarial</strong>, en cumplimiento de lo establecido en la Ley 2/2023, de 20 de febrero, reguladora de la protección de las personas que informen sobre infracciones normativas y de lucha contra la corrupción.</p>
+    <p>Esta política es de aplicación a toda persona que mantenga o haya mantenido una relación laboral, profesional o contractual con la organización, incluyendo empleados, directivos, proveedores, colaboradores y clientes.</p>
+
+    <h2>2. Responsable del canal</h2>
+    <p>La gestión del Canal de Denuncias corresponde al <strong>Responsable de Cumplimiento Normativo</strong> designado por la Dirección. Esta persona actúa con total independencia funcional y tiene prohibido revelar la identidad del informante sin su consentimiento expreso, salvo en los supuestos establecidos por la Ley.</p>
+    <p>Contacto directo con el Responsable del Canal: <a href="mailto:info@gascongestion.com" style="color:var(--azul-claro);">info@gascongestion.com</a></p>
+    <p>El responsable garantizará la confidencialidad, objetividad e imparcialidad en la tramitación de todas las comunicaciones recibidas.</p>
+
+    <h2>3. Tipos de comunicaciones admitidas</h2>
+    <p>Se admiten comunicaciones sobre infracciones del Derecho de la Unión Europea, infracciones penales y administrativas graves o muy graves, así como cualquier incumplimiento del Código Ético de la organización, en particular:</p>
+    <ul>
+      <li>Irregularidades fiscales, tributarias o contables</li>
+      <li>Acoso laboral, sexual o por razón de identidad de género</li>
+      <li>Fraude interno o apropiación indebida de activos</li>
+      <li>Conflictos de interés no declarados</li>
+      <li>Vulneraciones del RGPD o la LOPDGDD</li>
+      <li>Blanqueo de capitales o financiación del terrorismo</li>
+      <li>Infracciones en materia de seguridad y salud en el trabajo</li>
+      <li>Prácticas de competencia desleal o corrupción en el sector privado</li>
+    </ul>
+
+    <h2>4. Procedimiento de tramitación</h2>
+    <ol>
+      <li><strong>Recepción:</strong> La comunicación es recibida y registrada por el Responsable del Canal, que le asigna un número de expediente único.</li>
+      <li><strong>Acuse de recibo:</strong> En un plazo máximo de 7 días hábiles desde su recepción, se comunicará al informante que su denuncia ha sido recibida.</li>
+      <li><strong>Admisión a trámite:</strong> El Responsable evaluará la admisibilidad de la comunicación. Las comunicaciones inadmisibles serán archivadas motivadamente.</li>
+      <li><strong>Investigación:</strong> Las comunicaciones admitidas serán objeto de investigación, pudiendo recabarse información adicional de las personas implicadas, testigos y documentos relevantes.</li>
+      <li><strong>Resolución:</strong> Concluida la investigación, el Responsable emitirá un informe con las conclusiones y, en su caso, medidas correctoras o derivación a las autoridades competentes.</li>
+      <li><strong>Respuesta motivada:</strong> En un plazo máximo de 3 meses (prorrogable a 6), se comunicará al informante el resultado de las actuaciones realizadas.</li>
+    </ol>
+
+    <h2>5. Garantías del informante</h2>
+    <p>La organización garantiza al informante las siguientes protecciones, conforme a la Ley 2/2023:</p>
+    <ul>
+      <li><strong>Confidencialidad:</strong> La identidad del informante no será revelada sin su consentimiento, salvo obligación legal o judicial.</li>
+      <li><strong>Anonimato:</strong> Se admiten denuncias anónimas, que serán tramitadas con igual diligencia.</li>
+      <li><strong>Prohibición de represalias:</strong> Queda expresamente prohibido cualquier acto de represalia, directa o indirecta, contra el informante. Se consideran represalias: el despido, la degradación, el cambio de puesto, la discriminación, las intimidaciones, el daño a la reputación y cualquier trato perjudicial.</li>
+      <li><strong>Inversión de la carga de la prueba:</strong> En los procedimientos seguidos contra el informante, este no deberá demostrar la ausencia de represalia; corresponderá a la organización acreditar que cualquier medida adoptada está justificada por motivos ajenos a la denuncia.</li>
+      <li><strong>Acceso a la información:</strong> El informante podrá consultar en todo momento el estado de su expediente mediante el código de referencia asignado.</li>
+    </ul>
+
+    <h2>6. Tratamiento de datos personales</h2>
+    <p>Los datos personales facilitados en la comunicación serán tratados por esta organización en su condición de Responsable del Tratamiento, con la finalidad exclusiva de gestionar el expediente de denuncia, conforme a las siguientes bases legales:</p>
+    <table>
+      <thead><tr><th>Dato</th><th>Base legal</th><th>Plazo de conservación</th></tr></thead>
+      <tbody>
+        <tr><td>Identidad del informante (si la facilita)</td><td>Obligación legal (Ley 2/2023)</td><td>10 años desde cierre del expediente</td></tr>
+        <tr><td>Datos del denunciado</td><td>Obligación legal (Ley 2/2023)</td><td>10 años desde cierre del expediente</td></tr>
+        <tr><td>Contenido de la comunicación</td><td>Obligación legal / interés legítimo</td><td>10 años desde cierre del expediente</td></tr>
+        <tr><td>Correo electrónico de seguimiento</td><td>Consentimiento del interesado</td><td>Hasta cierre del expediente</td></tr>
+      </tbody>
+    </table>
+    <p>El informante podrá ejercer sus derechos de acceso, rectificación, supresión, limitación y portabilidad dirigiéndose al Responsable del Canal, con la salvedad de que el ejercicio del derecho de supresión puede estar limitado durante la tramitación del expediente.</p>
+
+    <h2>7. Denuncia de mala fe</h2>
+    <p>La formulación de denuncias con conocimiento de su falsedad o con la finalidad de perjudicar a terceros constituye un uso abusivo del canal, podrá ser objeto de medidas disciplinarias conforme al convenio colectivo aplicable y, en su caso, dar lugar a responsabilidad civil y/o penal.</p>
+
+    <h2>8. Canales externos de denuncia</h2>
+    <p>Con independencia del canal interno, el informante tiene derecho a presentar su comunicación ante las autoridades externas competentes:</p>
+    <ul>
+      <li><strong>Autoridad Independiente de Protección del Informante (A.A.I.)</strong> — Organismo creado por la Ley 2/2023 para la supervisión de los canales de denuncia.</li>
+      <li><strong>Agencia Estatal de Administración Tributaria (AEAT)</strong> — Para infracciones tributarias.</li>
+      <li><strong>Agencia Española de Protección de Datos (AEPD)</strong> — Para vulneraciones de protección de datos.</li>
+      <li><strong>Banco de España / CNMV</strong> — Para infracciones financieras o bursátiles.</li>
+      <li><strong>Fiscalía Anticorrupción</strong> — Para delitos de corrupción o tráfico de influencias.</li>
+      <li><strong>OLAF (Oficina Europea de Lucha contra el Fraude)</strong> — Para infracciones que afecten a fondos de la UE.</li>
+    </ul>
+
+    <h2>9. Revisión y actualización</h2>
+    <p>Esta política será revisada anualmente por el Responsable de Cumplimiento Normativo y siempre que se produzcan cambios normativos relevantes. Cualquier modificación será comunicada a toda la plantilla con antelación mínima de 30 días.</p>
+
+    <div style="margin-top:2rem; padding:1rem; background:var(--gris); border-radius:var(--radio); font-family:Arial,sans-serif; font-size:0.82rem; color:var(--texto-sec);">
+      <strong>Documento aprobado por la Dirección.</strong> Versión 1.0 — Enero 2024. Este documento es de carácter orientativo y debe ser adaptado a las circunstancias específicas de cada organización. Consulte con su asesor legal para su personalización.
+    </div>
+  </div>
+
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="footer-aviso">
+  Canal de Denuncias Interno · Gascón Gestión Empresarial — Conforme a la Ley 2/2023 y Directiva (UE) 2019/1937 &nbsp;|&nbsp; 
+  <a href="#" onclick="mostrarSeccion('politica', document.querySelectorAll('.tab-btn')[4]); return false;">Política de privacidad</a> &nbsp;|&nbsp;
+  Las comunicaciones son confidenciales y están protegidas por ley.
+</footer>
+
+<script>
+// ——— NAVEGACIÓN POR PESTAÑAS ———
+function mostrarSeccion(id, boton) {
+  document.querySelectorAll('.seccion').forEach(s => s.classList.remove('activa'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('activo'));
+  document.getElementById('sec-' + id).classList.add('activa');
+  if (boton) boton.classList.add('activo');
+  window.scrollTo(0, 0);
+}
+
+// ——— STEPPER FORMULARIO ———
+var pasoActual = 1;
+
+function irPaso(n) {
+  if (n > pasoActual && !validarPaso(pasoActual)) return;
+  document.querySelectorAll('.paso-contenido').forEach(p => p.classList.remove('activo'));
+  document.getElementById('paso' + n).classList.add('activo');
+
+  for (var i = 1; i <= 4; i++) {
+    var circ = document.getElementById('pc' + i);
+    var linea = document.getElementById('pl' + i);
+    circ.classList.remove('activo', 'hecho');
+    if (linea) linea.classList.remove('activa');
+    if (i < n) { circ.classList.add('hecho'); circ.textContent = '✓'; }
+    else if (i === n) { circ.classList.add('activo'); circ.textContent = i; }
+    else { circ.textContent = i; }
+    if (linea && i < n) linea.classList.add('activa');
+  }
+
+  if (n === 4) generarResumen();
+  pasoActual = n;
+}
+
+function validarPaso(p) {
+  if (p === 1) {
+    if (!document.getElementById('area').value || !document.getElementById('ambito').value) {
+      alert('Por favor, selecciona la categoría y el ámbito de la infracción.');
+      return false;
+    }
+  }
+  if (p === 2) {
+    var desc = document.getElementById('descripcion').value.trim();
+    if (desc.length < 50) {
+      alert('Por favor, describe los hechos con más detalle (mínimo 50 caracteres).');
+      return false;
+    }
+  }
+  return true;
+}
+
+function toggleIdentificacion() {
+  var modal = document.getElementById('modalidad').value;
+  document.getElementById('bloque-identificacion').style.display = modal === 'confidencial' ? 'block' : 'none';
+}
+
+document.getElementById('comunicaciones').addEventListener('change', function() {
+  var modal = document.getElementById('modalidad').value;
+  document.getElementById('email-anonimo').style.display =
+    (this.value === 'si' && modal === 'anonima') ? 'block' : 'none';
+});
+
+function generarResumen() {
+  var areas = {
+    fiscal: 'Fraude fiscal o tributario', contabilidad: 'Irregularidades contables', laboral: 'Acoso laboral / discriminación',
+    datos: 'Protección de datos', blanqueo: 'Blanqueo de capitales', competencia: 'Competencia desleal / corrupción',
+    sstt: 'Seguridad y salud en el trabajo', medioambiente: 'Infracciones medioambientales', etica: 'Código Ético', otro: 'Otro'
+  };
+  var ambitos = {
+    interno: 'Empleado o directivo', proveedor: 'Proveedor / colaborador', cliente: 'Cliente', proceso: 'Proceso interno', otro: 'Otro'
+  };
+  var gravedad = { alta: '⚠️ Alta', media: '🔶 Media', baja: '🟡 Baja', desconocida: 'No determinada' };
+  var modalidad = { anonima: 'Anónima', confidencial: 'Confidencial (datos protegidos)' };
+
+  var html = '<table style="width:100%; font-size:0.87rem; font-family:Arial,sans-serif;">' +
+    fila('Categoría', areas[document.getElementById('area').value] || '—') +
+    fila('Ámbito', ambitos[document.getElementById('ambito').value] || '—') +
+    fila('Gravedad', gravedad[document.getElementById('gravedad').value] || '—') +
+    fila('Descripción', (document.getElementById('descripcion').value.trim().substring(0, 120) + (document.getElementById('descripcion').value.length > 120 ? '...' : '')) || '—') +
+    fila('Fecha de hechos', document.getElementById('fecha-hechos').value || 'No indicada') +
+    fila('Lugar / Departamento', document.getElementById('lugar').value || 'No indicado') +
+    fila('Evidencias', document.getElementById('evidencias').options[document.getElementById('evidencias').selectedIndex].text) +
+    fila('Modalidad', modalidad[document.getElementById('modalidad').value] || '—') +
+    '</table>';
+  document.getElementById('resumen-denuncia').innerHTML = html;
+}
+
+function fila(k, v) {
+  return '<tr><td style="padding:5px 8px; color:var(--texto-sec); white-space:nowrap; vertical-align:top;">' + k + '</td><td style="padding:5px 8px; font-weight:500; color:var(--texto);">' + v + '</td></tr>';
+}
+
+// ——— ENVÍO ———
+function enviarDenuncia() {
+  if (!document.getElementById('acepto-veracidad').checked) {
+    alert('Debes declarar la veracidad de los hechos comunicados.'); return;
+  }
+  if (!document.getElementById('acepto-rgpd').checked) {
+    alert('Debes aceptar la Política de Privacidad.'); return;
+  }
+  if (!document.getElementById('acepto-politica').checked) {
+    alert('Debes confirmar haber leído la Política del Canal.'); return;
+  }
+
+  var btnEnviar = document.querySelector('#paso4 .btn-principal');
+  btnEnviar.textContent = 'Enviando...';
+  btnEnviar.disabled = true;
+
+  var areas = {
+    fiscal: 'Fraude fiscal o tributario', contabilidad: 'Irregularidades contables', laboral: 'Acoso / discriminación',
+    datos: 'Protección de datos', blanqueo: 'Blanqueo de capitales', competencia: 'Competencia / corrupción',
+    sstt: 'Seguridad laboral', medioambiente: 'Medio ambiente', etica: 'Código Ético', otro: 'Otro'
+  };
+  var ambitos = { interno: 'Empleado o directivo', proveedor: 'Proveedor / colaborador', cliente: 'Cliente', proceso: 'Proceso interno', otro: 'Otro' };
+  var gravedad = { alta: 'Alta', media: 'Media', baja: 'Baja', desconocida: 'No determinada' };
+  var modalidades = { anonima: 'Anónima', confidencial: 'Confidencial' };
+  var evidencias_sel = document.getElementById('evidencias');
+
+  var codigo = generarCodigo();
+
+  var params = {
+    codigo: codigo,
+    categoria: areas[document.getElementById('area').value] || document.getElementById('area').value,
+    ambito: ambitos[document.getElementById('ambito').value] || document.getElementById('ambito').value,
+    gravedad: gravedad[document.getElementById('gravedad').value] || '—',
+    descripcion: document.getElementById('descripcion').value.trim(),
+    fecha_hechos: document.getElementById('fecha-hechos').value || 'No indicada',
+    lugar: document.getElementById('lugar').value || 'No indicado',
+    implicados: document.getElementById('implicados').value || 'No indicado',
+    evidencias: evidencias_sel.options[evidencias_sel.selectedIndex].text,
+    modalidad: modalidades[document.getElementById('modalidad').value] || '—',
+    fecha_envio: new Date().toLocaleString('es-ES'),
+    destinatario: 'info@gascongestion.com'
+  };
+
+  emailjs.send('service_0bttfnp', 'template_ggx7jai', params)
+    .then(function() {
+      document.getElementById('codigo-generado').textContent = codigo;
+      guardarExpediente(codigo);
+      document.querySelector('.form-card').style.display = 'none';
+      document.querySelector('.progreso-bar').style.display = 'none';
+      document.getElementById('exito-envio').classList.add('visible');
+    }, function(error) {
+      btnEnviar.textContent = '✅  Enviar denuncia';
+      btnEnviar.disabled = false;
+      alert('Error al enviar la denuncia. Por favor, inténtalo de nuevo o contacta directamente con info@gascongestion.com\n\nDetalle técnico: ' + JSON.stringify(error));
+    });
+}
+
+function generarCodigo() {
+  var y = new Date().getFullYear();
+  var n = String(Math.floor(Math.random() * 99999)).padStart(5, '0');
+  return 'DN-' + y + '-' + n;
+}
+
+function guardarExpediente(codigo) {
+  var areas = {
+    fiscal: 'Fraude fiscal / tributario', contabilidad: 'Irregularidades contables', laboral: 'Acoso / discriminación',
+    datos: 'Protección de datos', blanqueo: 'Blanqueo de capitales', competencia: 'Competencia / corrupción',
+    sstt: 'Seguridad laboral', medioambiente: 'Medio ambiente', etica: 'Código Ético', otro: 'Otro'
+  };
+  var modalidades = { anonima: 'Anónima', confidencial: 'Confidencial' };
+  var hoy = new Date().toLocaleDateString('es-ES');
+  var plazo = new Date(); plazo.setMonth(plazo.getMonth() + 3);
+
+  var exp = {
+    codigo: codigo,
+    categoria: areas[document.getElementById('area').value] || 'No especificada',
+    fecha: hoy,
+    modalidad: modalidades[document.getElementById('modalidad').value] || 'Anónima',
+    plazo: plazo.toLocaleDateString('es-ES'),
+    timeline: [
+      { fecha: hoy, desc: 'Denuncia recibida y registrada en el sistema.', activo: true },
+      { fecha: hoy, desc: 'Asignación a responsable de investigación.', activo: true },
+      { fecha: '— pendiente —', desc: 'Revisión de admisibilidad y apertura de expediente.', activo: false },
+      { fecha: '— pendiente —', desc: 'Investigación en curso.', activo: false },
+      { fecha: '— pendiente —', desc: 'Resolución y comunicación al informante.', activo: false },
+    ]
+  };
+  try { localStorage.setItem('exp_' + codigo, JSON.stringify(exp)); } catch(e) {}
+}
+
+function nuevaDenuncia() {
+  document.querySelector('.form-card').style.display = 'block';
+  document.querySelector('.progreso-bar').style.display = 'flex';
+  document.getElementById('exito-envio').classList.remove('visible');
+  document.getElementById('descripcion').value = '';
+  irPaso(1);
+}
+
+// ——— CONSULTA DE EXPEDIENTE ———
+function consultarExpediente() {
+  var cod = document.getElementById('codigo-consulta').value.trim().toUpperCase();
+  document.getElementById('resultado-consulta').style.display = 'none';
+  document.getElementById('resultado-no-encontrado').style.display = 'none';
+
+  var exp = null;
+  try { var raw = localStorage.getItem('exp_' + cod); if (raw) exp = JSON.parse(raw); } catch(e) {}
+
+  if (exp) {
+    document.getElementById('exp-estado').textContent = 'En trámite — Admisión pendiente';
+    document.getElementById('exp-codigo').textContent = 'Expediente: ' + exp.codigo;
+    document.getElementById('exp-badge').textContent = 'ACTIVO';
+    document.getElementById('exp-cat').textContent = exp.categoria;
+    document.getElementById('exp-fecha').textContent = exp.fecha;
+    document.getElementById('exp-modal').textContent = exp.modalidad;
+    document.getElementById('exp-plazo').textContent = exp.plazo;
+
+    var tl = exp.timeline.map(function(item) {
+      return '<div class="tl-item' + (item.activo ? '' : ' pendiente') + '">' +
+        '<div class="tl-fecha">' + item.fecha + '</div>' +
+        '<div class="tl-desc">' + item.desc + '</div></div>';
+    }).join('');
+    document.getElementById('exp-timeline').innerHTML = tl;
+    document.getElementById('resultado-consulta').style.display = 'block';
+  } else if (cod.length > 5) {
+    document.getElementById('resultado-no-encontrado').style.display = 'block';
+  }
+}
+
+// Permitir buscar con Enter
+document.getElementById('codigo-consulta').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') consultarExpediente();
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init('vYzdrcEzir9ksqYnB');</script>
+
+</body>
+</html>
